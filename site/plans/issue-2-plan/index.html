@@ -1,0 +1,1266 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Issue #2 – Sync pee projectiles - Implementation Plans</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#issue-2-p0-sync-pee-projectiles-across-network" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Implementation Plans" class="md-header__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Implementation Plans
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Issue #2 – Sync pee projectiles
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Implementation Plans" class="md-nav__button md-logo" aria-label="Implementation Plans" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Implementation Plans
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked="">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plans
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Plans
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Sync pee projectiles
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue #2 – Sync pee projectiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-update-server-to-relay-projectile-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Update Server to Relay Projectile Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-remote-projectiles-ref-in-gamejsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Remote Projectiles Ref in Game.jsx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-modify-shootpee-to-emit-full-projectile-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Modify shootPee() to Emit Full Projectile Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-add-effect-to-listen-for-projectilefired-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add Effect to Listen for projectileFired Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-update-useframe-to-simulate-remote-projectiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Update useFrame to Simulate Remote Projectiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-render-remote-projectiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Render Remote Projectiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-cleanup-on-unmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Cleanup on Unmount
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests-post-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Tests (Post-Implementation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beforeafter-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before/After Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-cause-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Root Cause Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#files-to-modify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Files to Modify
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Files
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-update-server-to-relay-projectile-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Update Server to Relay Projectile Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-remote-projectiles-ref-in-gamejsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Remote Projectiles Ref in Game.jsx
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-modify-shootpee-to-emit-full-projectile-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Modify shootPee() to Emit Full Projectile Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-add-effect-to-listen-for-projectilefired-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Add Effect to Listen for projectileFired Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-update-useframe-to-simulate-remote-projectiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Update useFrame to Simulate Remote Projectiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-render-remote-projectiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Render Remote Projectiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-cleanup-on-unmount" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Cleanup on Unmount
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-tests-post-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Tests (Post-Implementation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-flow-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#beforeafter-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before/After Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#success-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Success Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="issue-2-p0-sync-pee-projectiles-across-network">Issue #2: P0: Sync pee projectiles across network</h1>
+<h2 id="summary">Summary</h2>
+<p>Add network synchronization for pee projectiles so all players in a room can see each other's pee streams, not just feel the damage. This is a critical feature for visual feedback, competitive integrity, and immersion.</p>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p><strong>Current State:</strong>
+- Pee projectiles are stored in a client-side <code>useRef([])</code> array in <code>Game.jsx</code>
+- When a player shoots, projectiles are created and rendered only on their own screen
+- The <code>shootPee()</code> function emits only the updated <code>storedPee</code> amount to the server
+- Server broadcasts player state changes but NOT projectile data
+- Other players see damage appear instantly with no visual projectile traveling toward them</p>
+<p><strong>Why This Is a Problem:</strong>
+- No visual feedback for who is shooting at you
+- Cannot see near-misses or learn from opponent's aim patterns
+- Damage feels random and disconnected from player actions
+- Breaks immersion and competitive integrity
+- Listed as P0 Critical in DIAGNOSIS.md</p>
+<h2 id="proposed-solution">Proposed Solution</h2>
+<p>Implement a client-server-client projectile sync system:</p>
+<ol>
+<li><strong>Client (Shooter)</strong>: Emit <code>shootPee</code> event with full projectile data (position, velocity, owner, timestamp)</li>
+<li><strong>Server</strong>: Relay projectile data to all other players in the room</li>
+<li><strong>Clients (Receivers)</strong>: Add remote projectiles to a <code>remoteProjectiles</code> ref and render them alongside local projectiles</li>
+<li><strong>Cleanup</strong>: Remove projectiles after 5 seconds or when they hit the ground</li>
+</ol>
+<p>The architecture maintains client-side physics simulation (for smooth rendering) while ensuring all clients receive the same initial projectile state.</p>
+<h2 id="files-to-modify">Files to Modify</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/Game.jsx</code></td>
+<td>Add <code>remoteProjectiles</code> ref, modify <code>shootPee()</code> to emit full projectile data, add effect to receive <code>projectileFired</code> events, update render to include remote projectiles</td>
+</tr>
+<tr>
+<td><code>server/index.js</code></td>
+<td>Add <code>shootPee</code> event handler to broadcast projectile data to room (currently only broadcasts storedPee update)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="new-files">New Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None</td>
+<td>This is a network sync feature - no new files needed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-steps">Implementation Steps</h2>
+<h3 id="step-1-update-server-to-relay-projectile-data">Step 1: Update Server to Relay Projectile Data</h3>
+<p>Modify <code>server/index.js</code> <code>shootPee</code> handler to broadcast projectile data:</p>
+<pre><code class="language-javascript">socket.on('shootPee', ({ projectile, storedPee }) =&gt; {
+  const player = players.get(socket.id)
+  if (player &amp;&amp; player.roomId &amp;&amp; player.alive) {
+    player.storedPee = Math.max(0, storedPee)
+    const room = rooms.get(player.roomId)
+    if (room) {
+      // Broadcast projectile to all other players
+      socket.to(player.roomId).emit('projectileFired', {
+        projectile: {
+          ...projectile,
+          ownerId: socket.id  // Include shooter ID for rendering
+        }
+      })
+      // Still broadcast player state for pee meter updates
+      socket.to(player.roomId).emit('gameState', { players: getRoomPlayers(room) })
+    }
+  }
+})
+</code></pre>
+<h3 id="step-2-add-remote-projectiles-ref-in-gamejsx">Step 2: Add Remote Projectiles Ref in Game.jsx</h3>
+<p>Add a new ref to store projectiles from other players:</p>
+<pre><code class="language-javascript">const remoteProjectiles = useRef([])
+</code></pre>
+<h3 id="step-3-modify-shootpee-to-emit-full-projectile-data">Step 3: Modify shootPee() to Emit Full Projectile Data</h3>
+<p>Update the <code>shootPee()</code> function to send complete projectile information:</p>
+<pre><code class="language-javascript">const projectile = {
+  id: `pee-${Date.now()}-${Math.random()}`,
+  position: shootPosition.toArray(),  // Send as array for serialization
+  velocity: velocity.toArray(),
+  owner: playerId,
+  color: '#ffff00',
+  size: 0.06,
+  createdAt: Date.now()
+}
+
+socket.emit('shootPee', { 
+  projectile, 
+  storedPee: newStoredPee 
+})
+</code></pre>
+<h3 id="step-4-add-effect-to-listen-for-projectilefired-events">Step 4: Add Effect to Listen for projectileFired Events</h3>
+<p>Add a new useEffect to receive and store remote projectiles:</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  if (!socket) return
+
+  const handleProjectileFired = ({ projectile }) =&gt; {
+    // Add to remote projectiles array
+    remoteProjectiles.current.push({
+      ...projectile,
+      position: new THREE.Vector3(...projectile.position),
+      velocity: new THREE.Vector3(...projectile.velocity)
+    })
+  }
+
+  socket.on('projectileFired', handleProjectileFired)
+
+  return () =&gt; {
+    socket.off('projectileFired', handleProjectileFired)
+  }
+}, [socket])
+</code></pre>
+<h3 id="step-5-update-useframe-to-simulate-remote-projectiles">Step 5: Update useFrame to Simulate Remote Projectiles</h3>
+<p>Add physics simulation for remote projectiles in the <code>useFrame</code> loop:</p>
+<pre><code class="language-javascript">// Update remote projectiles (same physics as local)
+remoteProjectiles.current = remoteProjectiles.current.filter(projectile =&gt; {
+  projectile.position.add(projectile.velocity.clone().multiplyScalar(safeDelta))
+  projectile.velocity.y -= 9.8 * safeDelta  // Apply gravity
+
+  // Check collision with local player
+  const localPlayerPos = camera.position
+  const distance = projectile.position.distanceTo(localPlayerPos)
+  if (distance &lt; 1 &amp;&amp; projectile.owner !== playerId) {
+    // Hit local player
+    socketRef.current.emit('peeHit', { 
+      targetId: playerId, 
+      damage: PEE_DAMAGE,
+      shooterId: projectile.owner 
+    })
+    return false  // Remove projectile on hit
+  }
+
+  // Cleanup old projectiles
+  const age = Date.now() - projectile.createdAt
+  return age &lt; 5000 &amp;&amp; projectile.position.y &gt; 0
+})
+</code></pre>
+<h3 id="step-6-render-remote-projectiles">Step 6: Render Remote Projectiles</h3>
+<p>Add remote projectiles to the render loop alongside local ones:</p>
+<pre><code class="language-javascript">{/* Remote Pee Projectiles */}
+{(remoteProjectiles.current || []).map(projectile =&gt; {
+  const vel = projectile.velocity.clone()
+  const len = 0.8
+  const up = new THREE.Vector3(0, 1, 0)
+  const dir = vel.clone().normalize()
+  const quat = new THREE.Quaternion().setFromUnitVectors(up, dir)
+
+  return (
+    &lt;mesh key={projectile.id} position={projectile.position} quaternion={quat}&gt;
+      &lt;capsuleGeometry args={[projectile.size, len, 4, 8]} /&gt;
+      &lt;meshStandardMaterial
+        color="#ffff00"
+        emissive="#ffff00"
+        emissiveIntensity={1}
+        transparent
+        opacity={0.95}
+      /&gt;
+    &lt;/mesh&gt;
+  )
+})}
+</code></pre>
+<h3 id="step-7-cleanup-on-unmount">Step 7: Cleanup on Unmount</h3>
+<p>Add cleanup to clear remote projectiles when component unmounts:</p>
+<pre><code class="language-javascript">useEffect(() =&gt; {
+  return () =&gt; {
+    remoteProjectiles.current = []
+  }
+}, [])
+</code></pre>
+<h2 id="test-strategy">Test Strategy</h2>
+<h3 id="unit-tests-post-implementation">Unit Tests (Post-Implementation)</h3>
+<ul>
+<li>Verify projectile data structure matches expected schema</li>
+<li>Test projectile cleanup after 5 seconds</li>
+<li>Test gravity application to remote projectiles</li>
+</ul>
+<h3 id="integration-tests">Integration Tests</h3>
+<ul>
+<li><strong>Multiplayer Test</strong>: Two players in same room</li>
+<li>Player A shoots → Player B sees projectile</li>
+<li>Player B gets hit → damage applied correctly</li>
+<li>Visual projectile matches trajectory</li>
+</ul>
+<h3 id="edge-cases">Edge Cases</h3>
+<ul>
+<li><strong>Projectile cleanup</strong>: Ensure old projectiles don't accumulate</li>
+<li><strong>Network latency</strong>: Remote projectiles may appear slightly delayed - acceptable for visual sync</li>
+<li><strong>Self-hits</strong>: With self-damage enabled (future), ensure own projectiles can hit self</li>
+<li><strong>Multiple shooters</strong>: Handle multiple simultaneous projectiles from different players</li>
+</ul>
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Network bandwidth</strong>: Sending projectile data frequently could increase bandwidth</td>
+<td>Only send on initial shoot, not every frame. Projectiles are small (~100 bytes each). At 10 shots/sec = ~1KB/sec negligible</td>
+</tr>
+<tr>
+<td><strong>Projectile desync</strong>: Different clients may simulate slightly different trajectories due to frame rate differences</td>
+<td>Acceptable for visual feedback. Server remains authoritative for hit detection</td>
+</tr>
+<tr>
+<td><strong>Memory leak</strong>: Projectiles accumulating in array</td>
+<td>Implement strict cleanup: remove on hit, on ground impact, or after 5 seconds</td>
+</tr>
+<tr>
+<td><strong>Cheating</strong>: Clients could emit fake projectile data</td>
+<td>Server validates: checks player has enough storedPee, rate-limits shoots (currently 30ms interval)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrams">Diagrams</h2>
+<h3 id="data-flow-architecture">Data Flow Architecture</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant P1 as Player A (Shooter)
+    participant Server
+    participant P2 as Player B (Viewer)
+
+    P1-&gt;&gt;P1: Hold mouse button
+    P1-&gt;&gt;P1: Create projectile (local)
+    P1-&gt;&gt;Server: shootPee { projectile, storedPee }
+    Server-&gt;&gt;Server: Update P1.storedPee
+    Server-&gt;&gt;P2: projectileFired { projectile }
+    P2-&gt;&gt;P2: Add to remoteProjectiles[]
+    P2-&gt;&gt;P2: Render projectile
+    P2-&gt;&gt;P2: Simulate physics (gravity)
+    opt Projectile hits P2
+        P2-&gt;&gt;Server: peeHit { targetId: P2, shooterId: P1 }
+        Server-&gt;&gt;Server: Apply damage to P2
+        Server-&gt;&gt;P1: gameState { players }
+        Server-&gt;&gt;P2: gameState { players }
+    end
+</code></pre>
+<h3 id="beforeafter-comparison">Before/After Comparison</h3>
+<p><strong>Before:</strong></p>
+<pre><code>Player A shoots → Only A sees pee → B takes damage (confusing!)
+</code></pre>
+<p><strong>After:</strong></p>
+<pre><code>Player A shoots → A sees pee → Server relays → B sees pee → B takes damage (clear!)
+</code></pre>
+<h2 id="performance-considerations">Performance Considerations</h2>
+<ul>
+<li><strong>Projectile limit</strong>: Each client renders their own projectiles + all remote projectiles</li>
+<li><strong>Expected load</strong>: 8 players × 10 shots/sec × 5 second lifetime = ~400 projectiles max</li>
+<li><strong>Rendering cost</strong>: Capsule geometry is cheap, instanced rendering could optimize further</li>
+<li><strong>Network cost</strong>: ~100 bytes per projectile × 80 shots/sec (8 players) = ~8KB/sec total</li>
+</ul>
+<h2 id="success-criteria">Success Criteria</h2>
+<ul>
+<li>[ ] All players in a room see each other's pee projectiles</li>
+<li>[ ] Projectiles follow consistent parabolic arc across all clients</li>
+<li>[ ] Hit detection works correctly with visual feedback</li>
+<li>[ ] No memory leaks from projectile accumulation</li>
+<li>[ ] Performance remains smooth with 8 players shooting simultaneously</li>
+</ul>
+<h2 id="related-issues">Related Issues</h2>
+<ul>
+<li>Issue #4: Sync juice box positions across network</li>
+<li>Issue #5: Add self-damage (pee on yourself)</li>
+<li>Issue #1: Add wind/hurricane mechanics (will affect projectile trajectory)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
