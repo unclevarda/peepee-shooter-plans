@@ -11,3 +11,4 @@ nav:
   - Home: index.md
   - Plans:
     - "Issue #2 – Sync pee projectiles": "plans/issue-2-plan.md"
+    - "Issue #3 – Sync juice box positions": "plans/issue-3-plan.md"
