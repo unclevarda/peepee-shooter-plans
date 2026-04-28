@@ -10,4 +10,4 @@ plugins:
 nav:
   - Home: index.md
   - Plans:
-    - "(Plans will appear here)": plans/.gitkeep
+    - "Issue #2 – Sync pee projectiles": "plans/issue-2-plan.md"
