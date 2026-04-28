@@ -1,0 +1,6 @@
+/* Diagram CSS Classes */
+.diagram-container { display: flex; justify-content: center; padding: 2rem; background: #1a1a2e; }
+.entity { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 1.5rem; border-radius: 8px; color: white; font-weight: bold; }
+.process { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1rem 1.5rem; border-radius: 8px; color: white; }
+.data { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1rem 1.5rem; border-radius: 8px; color: white; }
+.arrow { stroke: #ffffff; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
