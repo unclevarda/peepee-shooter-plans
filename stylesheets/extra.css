@@ -1,0 +1,4 @@
+/* Custom styles for implementation plans */
+.md-typeset h1 { color: #7c4dff; }
+.md-typeset h2 { color: #536dfe; border-bottom: 2px solid #536dfe; padding-bottom: 0.3em; }
+.md-typeset h3 { color: #448aff; }
