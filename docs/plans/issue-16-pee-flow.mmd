@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant Player
+    participant Game as Game.jsx
+    participant Server
+    participant OtherPlayers
+    
+    Player->>Game: Collect juice box
+    Game->>Game: storedPee += 0.3 (cap at 1.0)
+    Game->>Server: collectJuice event
+    Server->>OtherPlayers: juiceCollected broadcast
+    
+    Player->>Game: Hold mouse (shoot)
+    Game->>Game: Play zipper sound
+    Game->>Game: After 500ms delay, start shooting
+    loop Every 40ms while shooting
+        Game->>Game: Create pee projectile
+        Game->>Game: storedPee -= drainAmount
+        Game->>Server: shootPee event with projectile data
+        Server->>OtherPlayers: peeProjectile broadcast
+    end
+    
+    Game->>Game: Check projectile collision
+    alt Hit player
+        Game->>Server: peeHit event
+        Server->>OtherPlayers: gameState update
+        OtherPlayers->>OtherPlayers: Update peeAmount
+    else Hit ground/obstacle
+        Game->>Game: Create splash particles
+    end

@@ -12,3 +12,4 @@ nav:
   - Plans:
     - "Issue #2 – Sync pee projectiles": "plans/issue-2-plan.md"
     - "Issue #3 – Sync juice box positions": "plans/issue-3-plan.md"
+    - "Issue #16 – Remove wind/hurricane mechanics": "plans/issue-16-plan.md"
