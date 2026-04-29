@@ -1,0 +1,16 @@
+graph TD
+    subgraph Before["Before - Wind System Active"]
+        S1[Server: Wind Generator] -->|windUpdate event| C1[Client: Wind State]
+        S1 -->|hurricaneWarning| C1
+        C1 -->|Apply wind force| P1[Pee Projectiles]
+    end
+    
+    subgraph After["After - Wind Removed"]
+        S2[Server: No Wind Logic]
+        C2[Client: No Wind State]
+        P2[Pee Projectiles]
+        S2 -.->|No connection| C2
+        C2 -.->|No wind force| P2
+    end
+    
+    Before --> After
