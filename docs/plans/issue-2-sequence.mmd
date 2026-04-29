@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant P1 as Player A (Shooter)
+    participant Server
+    participant P2 as Player B (Viewer)
+    
+    P1->>P1: Hold mouse button
+    P1->>P1: Create projectile (local)
+    P1->>Server: shootPee { projectile, storedPee }
+    Server->>Server: Update P1.storedPee
+    Server->>P2: projectileFired { projectile }
+    P2->>P2: Add to remoteProjectiles[]
+    P2->>P2: Render projectile
+    P2->>P2: Simulate physics (gravity)
+    opt Projectile hits P2
+        P2->>Server: peeHit { targetId: P2, shooterId: P1 }
+        Server->>Server: Apply damage to P2
+        Server->>P1: gameState { players }
+        Server->>P2: gameState { players }
+    end
